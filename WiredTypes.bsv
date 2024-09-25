@@ -7,7 +7,9 @@ import LoongArchInst::*;
 typedef Bit#(BRANCH_SLOT) SpecTag;
 typedef Bit#(TLog#(BRANCH_SLOT)) SpecId;
 
-typedef Bit#(64) Data;
+typedef Bit#(64) Data_t;
+typedef Bit#(64) VAddr_t;
+typedef Bit#(48) PAddr_t;
 
 // 流水线中的类型信息
 typedef Bit#(5) GpArchRid;
@@ -26,17 +28,16 @@ typedef union tagged {
 } PhyRid deriving (Bits, Eq, FShow, Bounded);
 
 typedef struct {
-    Maybe#(ArchRid) src0;
+    Maybe#(ArchRid) src0; // A Valid dst with 0, means scratch pad
     Maybe#(ArchRid) src1;
-    Maybe#(ArchRid) src2;
-    Maybe#(ArchRid) dst;
+    Maybe#(ArchRid) dst;  // A Valid dst with 0, means temp registers for sta/fmadd
 } ArchRegs deriving (Bits, Eq, FShow);
-// stx may need 3 src registers / and fmadd may need 3 src registers with an additional dst registers
+// stx may need 3 src registers 
+// fmadd may need 3 src registers with an additional dst registers
 
 typedef struct {
     Maybe#(PhyRid) src0;
     Maybe#(PhyRid) src1;
-    Maybe#(PhyRid) src2;
     Maybe#(PhyRid) dst;
 } PhyRegs deriving (Bits, Eq, FShow);
 
